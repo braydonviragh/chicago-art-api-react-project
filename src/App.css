@@ -1,0 +1,383 @@
+* {
+  font-family: "Roboto", sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+.ui.cards > .card > .image {
+  height: 250px;
+  padding: 20px;
+  background: #fff;
+  margin: auto;
+}
+.ui.cards > .card > .image > img {
+  height: 100%;
+  max-width: 100%;
+  width: auto;
+}
+.ui.cards > .card > .content > .header {
+  height: 48px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+.ui.cards > .card > .content > .description {
+  height: 36px;
+  margin-bottom: 0px;
+  overflow: hidden;
+}
+.ui.cards > .card .meta.price {
+  margin-bottom: 5px;
+  font-size: 18px;
+  color: #333;
+  font-weight: 600;
+}
+
+.ui.cards > .card .meta.price > a {
+  font-size: 1.3rem;
+  color: #222;
+}
+
+.ui.menu.fixed {
+  height: 60px;
+  padding-top: 15px;
+}
+
+.ui.grid.container {
+  margin-top: 125px;
+}
+
+.ui.grid > .row {
+  background: #fff;
+}
+.ui.grid > .row > .column.lp {
+  padding: 20px 40px 20px 20px;
+  align-self: flex-start !important;
+}
+.ui.grid > .row > .column.rp {
+  padding: 20px 20px 20px 40px;
+  text-align: left;
+  align-self: flex-start !important;
+}
+
+.ui.grid > .row > .column > img,
+.ui.grid > .row > img {
+  height: 100%;
+}
+.ui.placeholder .header:not(:first-child):before,
+.ui.placeholder .image:not(:first-child):before,
+.ui.placeholder .paragraph:not(:first-child):before {
+  display: none;
+}
+
+.ui.label,
+.ui.labels .label {
+  font-size: 22px;
+}
+
+.column.rp h1 {
+  color: #333;
+}
+.column.rp p {
+  font-size: 18px;
+  color: #777;
+}
+.ui.placeholder.segment .column .button,
+.ui.placeholder.segment .column .field,
+.ui.placeholder.segment .column textarea,
+.ui.placeholder.segment .column > .ui.input {
+  background-color: #ff3e6c;
+  border: 1px solid #ff3e6c;
+  color: #fff;
+  font-size: 18px;
+  margin-left: 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.pagination-button {
+  border: none;
+  background: white;
+  color: black;
+  font-size: 16px;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin: 0 4px;
+  outline: none;
+}
+
+.pagination-button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination-number {
+  border: none;
+  background: white;
+  color: black;
+  font-size: 16px;
+  padding: 5px 16px;
+  cursor: pointer;
+  margin: 0 4px;
+  outline: none;
+}
+
+.pagination-number.active {
+  background: black;
+  color: white;
+}
+
+#page-limit {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 34px;
+  padding: 6px 12px;
+  width: 100%;
+}
+
+#page-limit:focus {
+  border-color: #aaa;
+  outline: none;
+}
+
+#search-bar {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 50%;
+  padding: 6px 12px;
+  background-color: #fff;
+}
+
+.absoluteSearchBar { 
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  top: 80px;
+}
+
+.container h2 {
+  cursor: pointer;
+}
+.flex_content { 
+  display: flex;
+  justify-content: space-between;
+}
+.fav_icon img  { 
+  height: 24px;
+  width: 24px;
+  z-index: 99;
+  position: relative;
+}
+
+.product-detail-page {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+
+.product-detail-page .product-image {
+  max-width: 50%;
+  height: 500px;
+  margin: 0 20px 20px 0;
+}
+
+.product-detail-page .product-info {
+  text-align: center;
+  font-size: 18px;
+  width: 50%;
+  line-height: 32px;
+}
+
+.product-detail-page .product-info .artist-name {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.product-detail-page .product-info .details {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.product-detail-page img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.product-detail-page .product-info .header {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.product-detail-page .product-info .artist-name {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+.ui.menu > .ui.container { 
+  padding: 0 20px;
+}
+.ui.menu > .ui.container > h4 { 
+  margin: 5px 0 0 15px;
+}
+.detail_title { 
+  font-weight: 500;
+}
+.hamburger-menu {
+  display: flex;
+  flex-direction: column;
+  -moz-box-pack: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out 0s;
+  transform: translateX(-100%);
+}
+.hamburger-icon { 
+  display: none;
+}
+.hamburger-menu.open {
+  display: flex;
+  flex-direction: column;
+  -moz-box-pack: center;
+  justify-content: center;
+  background: #fff;
+  transform: translateX(0px);
+  height: 100vh;
+  text-align: left;
+  padding: 2rem;
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  border: 1px solid rgba(0,0,0,.85);;
+  border-radius: .28571429rem;
+  transition: transform 0.3s ease-in-out 0s;
+  transform: translateX(0px);
+}
+.hamburger-menu.open h5 { 
+  margin: 0 auto;
+}
+.hamburger-menu.closed h5 {
+  display: none;
+}
+.hamburger-menu.closed a { 
+  display: none;
+}
+  
+.hamburger-menu .bar {
+  width: 30px;
+  height: 3px;
+  background-color: black;
+  margin: 5px 0;
+}
+
+.hamburger-menu a { 
+  font-size: 2rem;
+  padding: 2rem 0px;
+  color: rgba(0,0,0,.85);
+  text-decoration: none;
+  transition: color 0.3s linear 0s;
+  cursor: pointer;
+  text-align: center;
+  line-height: 28px;
+}
+
+.ui.cards > .card > .content { 
+  height: 192px;
+  height: 107.5px;
+  overflow: clip;
+}
+
+.my-button-class {
+  background-color: white;
+  color: black;
+  font-size: 18px;
+  margin-left: 0;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.5s ease;
+  margin-left: 10px;
+  border-radius: 4px;
+}
+
+.my-button-class:hover { 
+  background-color: black;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.select-bar { 
+  margin-bottom: 33px;
+}
+
+.image_grid { 
+  width: 280px !important;
+}
+
+.favourites-link { 
+  color: black;
+  display: flex;
+}
+
+.favourites-div { 
+  position: absolute;
+  right: 25px;
+  bottom: 15px;
+  display: flex;
+}
+
+.favourites-div img { 
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+.profile-link { 
+  color: black;
+  margin: 8px;
+}
+
+@media only screen and (max-width: 800px) {
+  h2,.profile-link,.favourites-div {
+    display: none;
+  }
+  .hamburger-icon { 
+    display: flex;
+    z-index: 99;
+    position: relative;
+  }
+  .ui.menu.fixed { 
+    padding-top: 7px;
+  }
+}
+
+
+@media (max-width: 700px) {
+  .product-detail-page .product-image { 
+    width: 100%;
+  }
+  .product-detail-page .product-info { 
+    width: 100%;
+  }
+  .product-detail-page .product-info .header { 
+    padding: 15px 0 0 0;
+  }
+  .pagination-number{
+    padding: 0;
+  }
+}
+@media (max-width: 587px) { 
+  .image_grid { 
+    margin: 0 auto;
+  }
+}
