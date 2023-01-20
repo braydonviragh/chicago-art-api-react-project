@@ -9,21 +9,22 @@ const ProductComponent = ({ favourites = false }) => {
 
   const products = useSelector((state) => {
     if (favourites) {
-      return state.allProducts.productFavourites;
+      return (state.allProducts.productFavourites && state.allProducts.productFavourites.length) ? state.allProducts.productFavourites : []
     }
-    return state.allProducts.products;
-  })
+    return (state.allProducts.products && state.allProducts.products.length) ? state.allProducts.products : [];
+  });
   const productFavourites = useSelector((state) => state.allProducts.productFavourites);
   const [heartIconSources, setHeartIconSources] = useState({});
 
   useEffect(() => {
-    const updatedHeartIconSources = products.reduce((acc, product) => {
+    const updatedHeartIconSources = (productFavourites != null) ? products.reduce((acc, product) => {
       acc[product.id] = productFavourites.find((fav) => fav.id === product.id) 
         ? "../images/icons/heart.png" 
         : "../images/icons/like.png";
       return acc;
-    }, {});
+    }, {}) : {}
     setHeartIconSources(updatedHeartIconSources);
+    
   }, [productFavourites, products]);
   const renderList = products.map((product) => {
     const { id, title, image_id, artist_title } = product;
@@ -31,7 +32,7 @@ const ProductComponent = ({ favourites = false }) => {
     if(image_source == 'https://www.artic.edu/iiif/2/null/full/843,/0/default.jpg') { 
       image_source = '../images/icons/not-available.jpg'
     }
-    const heartIconSource = heartIconSources[id];
+    const heartIconSource = (heartIconSources[id]) ? heartIconSources[id] : "../images/icons/like.png";
 
     function toggleFavourite(art) {
       dispatch(favouriteToggle(art));
@@ -46,7 +47,7 @@ const ProductComponent = ({ favourites = false }) => {
   
     function handleMouseLeave(element) {
       const id = element.target.getAttribute("id");
-      const isFavourite = productFavourites.find((fav) => fav.id == id);
+      const isFavourite = (productFavourites) ? productFavourites.find((fav) => fav.id == id) : false
       if(!isFavourite) {
           element.target.src = "../images/icons/like.png"
       }
