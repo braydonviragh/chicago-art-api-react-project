@@ -1,4 +1,4 @@
-##Chicago Art API React##
+##Chicago Art API React
 
 A React, Redux and Redux Thunk project that interfaces with The Art Institute of Chicago to search and filter art pieces
 
