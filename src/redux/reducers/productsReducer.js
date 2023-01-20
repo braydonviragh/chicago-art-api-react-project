@@ -23,7 +23,7 @@ export const productsReducer = (state = intialState, { type, payload }) => {
       case ActionTypes.SEARCH_ARTWORK:
         return { ...state, products: payload};
       case ActionTypes.SET_REMOVE_TOGGLE:
-        let newFavourites = [...state.productFavourites];
+        let newFavourites = (state.productFavourites) ? [...state.productFavourites] : [{}];
         if(newFavourites.length == 0) { 
           newFavourites.push(payload);
         } else { 
