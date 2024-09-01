@@ -70,7 +70,11 @@ const ProductComponent = ({ favourites = false, products = null }) => {
                 <div className="header" onClick={() => routeToDetailsPage(id)}>{title}</div>
                 <div className="flex_content">
                   <div className="meta">{artist_title}</div>
-                  <div onClick={() => toggleFavourite(product)} className="fav_icon">
+                  <div onClick={(e) => {                
+                    e.preventDefault(); 
+                    e.stopPropagation(); 
+                    toggleFavourite(product); 
+                  }} className="fav_icon">
                     <img
                       id={product.id}
                       src={heartIconSource}
