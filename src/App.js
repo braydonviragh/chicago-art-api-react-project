@@ -6,6 +6,7 @@ import Header from "./containers/Header";
 import "./App.css";
 import ProductDetails from "./containers/ProductDetails";
 import SearchBar from "./containers/SearchBar";
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route>404 Not Found!</Route>
         </Switch>
       </Router>
+      <Toaster position="top-center" />
     </div>
   );
 }

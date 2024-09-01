@@ -1,40 +1,52 @@
-import React, { useEffect, useCallback, useMemo } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts, setProductFavourites } from "../redux/actions/productsActions";
+import { Link } from "react-router-dom";
+import { setProductFavourites, setFavouritesPage, setFavouritesPageLimit } from "../redux/actions/productsActions";
 import ProductComponent from "./ProductComponent";
 import Pagination from "./Pagination";
+import SkeletonLoader from "./SkeletonLoader";
 
 const FavouritePage = () => {
-  const productMeta = useSelector((state) => state.allProducts.productMeta);
-  const paginationInfo = useSelector((state) => ({
-    currentPage: state.allProducts.currentPage,
-    totalPages: state.allProducts.totalPages,
-    pageLimit: state.allProducts.pageLimit,
-  }));
-  const productFavourites = useSelector(state => state.allProducts.productFavourites);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const { currentPage, totalPages, pageLimit, productFavourites } = useSelector((state) => state.allProducts);
   
   useEffect(() => {
-    dispatch(fetchProducts());
-    const savedFavourites = JSON.parse(localStorage.getItem("productFavourites")) || [];
-    setProductFavourites(savedFavourites);
-    const loadFavourites = async () => {
-      const savedFavourites = await JSON.parse(localStorage.getItem("productFavourites"));
-      dispatch(setProductFavourites(savedFavourites));
-    }
-    document.getElementById('search-bar').style.display = 'none';
-    document.getElementById('submit-search').style.display = 'none';
-    loadFavourites();
+    const loadData = async () => {
+      setIsLoading(true);
+      const loadFavourites = async () => {
+        const savedFavourites = await JSON.parse(localStorage.getItem("productFavourites")) || [];
+        dispatch(setProductFavourites(savedFavourites));
+      }
+      document.getElementById('search-bar').style.display = 'none';
+      document.getElementById('submit-search').style.display = 'none';
+      await loadFavourites();
+      setIsLoading(false);
+    };
+    loadData();
   }, [dispatch]);
+
+  const paginatedFavorites = productFavourites.slice((currentPage - 1) * pageLimit, currentPage * pageLimit);
 
   return (
     <div>
       <div className="ui grid container">
-        <ProductComponent favourites={true}/>
+      <div className="page-header">
+        <h1 className="page-title">Your Favourites</h1>
+        <Link to="/" className="go-back-button">Go Back</Link>
+      </div>
+        {isLoading ? <SkeletonLoader /> : <ProductComponent favourites={true} products={paginatedFavorites} />}
+      </div>
+      <div className="pagination">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(productFavourites.length / pageLimit)}
+          pageLimit={pageLimit}
+          onPageChange={(page) => dispatch(setFavouritesPage(page))}
+          onPageLimitChange={(limit) => dispatch(setFavouritesPageLimit(limit))}
+        />
       </div>
     </div>
-
   );
 };
 

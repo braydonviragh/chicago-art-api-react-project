@@ -1,60 +1,66 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { favouriteToggle } from "../redux/actions/productsActions";
-import { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 
-const ProductComponent = ({ favourites = false }) => {
+const ProductComponent = ({ favourites = false, products = null }) => {
   const dispatch = useDispatch();
 
-  const products = useSelector((state) => {
-    if (favourites) {
-      return (state.allProducts.productFavourites && state.allProducts.productFavourites.length) ? state.allProducts.productFavourites : []
-    }
-    return (state.allProducts.products && state.allProducts.products.length) ? state.allProducts.products : [];
-  });
+  const allProducts = useSelector((state) => state.allProducts.products);
   const productFavourites = useSelector((state) => state.allProducts.productFavourites);
+
+  const displayProducts = products || (favourites ? productFavourites : allProducts);
+
   const [heartIconSources, setHeartIconSources] = useState({});
 
   useEffect(() => {
-    const updatedHeartIconSources = (productFavourites != null) ? products.reduce((acc, product) => {
+    const updatedHeartIconSources = displayProducts.reduce((acc, product) => {
       acc[product.id] = productFavourites.find((fav) => fav.id === product.id) 
         ? "../images/icons/heart.png" 
         : "../images/icons/like.png";
       return acc;
-    }, {}) : {}
+    }, {});
     setHeartIconSources(updatedHeartIconSources);
+  }, [productFavourites, displayProducts]);
+
+  const toggleFavourite = (product) => {
+    dispatch(favouriteToggle(product));
+    const isFavourite = productFavourites.some((fav) => fav.id === product.id);
+    setHeartIconSources(prev => ({
+      ...prev,
+      [product.id]: isFavourite ? "../images/icons/like.png" : "../images/icons/heart.png"
+    }));
     
-  }, [productFavourites, products]);
-  const renderList = products.map((product) => {
+    if (!isFavourite) {
+      toast.success('Saved to your favourites!', {
+        style: {
+          border: '1px solid #4CAF50',
+          padding: '16px',
+          color: '#4CAF50',
+        },
+        iconTheme: {
+          primary: '#4CAF50',
+          secondary: '#FFFAEE',
+        },
+      });
+    }
+  };
+
+  const renderList = displayProducts.map((product) => {
     const { id, title, image_id, artist_title } = product;
     let image_source = 'https://www.artic.edu/iiif/2/'+image_id+'/full/843,/0/default.jpg'
-    if(image_source == 'https://www.artic.edu/iiif/2/null/full/843,/0/default.jpg') { 
+    if(image_source === 'https://www.artic.edu/iiif/2/null/full/843,/0/default.jpg') { 
       image_source = '../images/icons/not-available.jpg'
     }
     const heartIconSource = (heartIconSources[id]) ? heartIconSources[id] : "../images/icons/like.png";
 
-    function toggleFavourite(art) {
-      dispatch(favouriteToggle(art));
-    }
     function routeToDetailsPage(art_id) {
       window.location.pathname = `/product/${art_id}`;  
     }
-    //Maybe dont need these
-    function handleMouseEnter(element) {
-      element.target.src = "../images/icons/heart.png"
-    }
-  
-    function handleMouseLeave(element) {
-      const id = element.target.getAttribute("id");
-      const isFavourite = (productFavourites) ? productFavourites.find((fav) => fav.id == id) : false
-      if(!isFavourite) {
-          element.target.src = "../images/icons/like.png"
-      }
-    }
     return (
       <div className="image_grid column" key={id}>
-        <Link to={`#`}>
+        <Link to={`/product/${id}`}>
           <div className="ui link cards">
             <div className="card">
               <div className="image" onClick={() => routeToDetailsPage(id)}>
@@ -66,10 +72,10 @@ const ProductComponent = ({ favourites = false }) => {
                   <div className="meta">{artist_title}</div>
                   <div onClick={() => toggleFavourite(product)} className="fav_icon">
                     <img
-                    id={product.id}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    src={heartIconSource}/>
+                      id={product.id}
+                      src={heartIconSource}
+                      alt="Favorite icon"
+                    />
                   </div>
                 </div>
               </div>

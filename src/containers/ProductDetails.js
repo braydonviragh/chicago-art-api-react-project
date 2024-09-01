@@ -1,61 +1,60 @@
-import React, { useEffect } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCollectionDetail,
   removeSelectedProduct,
 } from "../redux/actions/productsActions";
+import SingularSkeletonLoader from "./SingularSkeletonLoader";
+
 const ProductDetails = () => {
   const { productId } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   let product = useSelector((state) => state.allProducts.productDetail);
-  const products = useSelector((state) => (state.allProducts.products));
-  const { id, title, image_id, artist_title, place_of_origin, medium_display, artwork_type_title, department_title} = product;
+  const { title, image_id, artist_title, place_of_origin, medium_display, artwork_type_title, department_title, date_display, dimensions } = product;
   const dispatch = useDispatch();
   let image_source = 'https://www.artic.edu/iiif/2/'+image_id+'/full/843,/0/default.jpg'
-  if(image_source == 'https://www.artic.edu/iiif/2/null/full/843,/0/default.jpg') { 
+  if(image_source === 'https://www.artic.edu/iiif/2/null/full/843,/0/default.jpg') { 
     image_source = '../images/icons/not-available.jpg'
   }
 
   useEffect(() => {
-    if (productId && productId !== "")  
-    dispatch(fetchCollectionDetail(productId));
+    if (productId && productId !== "") {
+      setIsLoading(true);
+      dispatch(fetchCollectionDetail(productId)).then(() => {
+        setIsLoading(false);
+      });
+    }
     document.getElementById('search-bar').style.display = 'none';
     document.getElementById('submit-search').style.display = 'none';
     return () => {
       dispatch(removeSelectedProduct());
     };
+  }, [productId, dispatch]);
 
-  }, [productId]);
+  if (isLoading) {
+    return <SingularSkeletonLoader />;
+  }
 
   return (
-    <div className="ui grid container">
-      {Object.keys(product).length === 0 ? (
-        <div>...Loading</div>
-      ) : (
-        <div className="product-detail-page">
-          <div className="product-image">
-            <img src={image_source} alt={title} />
-          </div>
-          <div className="product-info">
-          <div className="header">{title}</div>
-            <div className="details">
-              <div>
-              <span className="detail_title">Artist: </span><span className="artist_title">{artist_title}</span>
-              </div>
-              <div>
-                <span className="detail_title">Style:</span> <span> {artwork_type_title} ({medium_display})</span>
-              </div>
-              <div>
-              <span className="detail_title">Department:</span> <span>{department_title}</span>
-              </div>
-              <div>
-                <span className="detail_title">Place of Origin:</span><span> {place_of_origin}</span>
-              </div>
-            </div>
+    <div className="product-detail-container">
+      <div className="product-detail-content">
+        <div className="product-image-container">
+          <img src={image_source} alt={title} className="product-image" />
+        </div>
+        <div className="product-info">
+          <h1 className="product-title">{title}</h1>
+          <div className="product-meta">
+            <p className="artist"><span>Artist:</span> {artist_title}</p>
+            <p className="date"><span>Date:</span> {date_display}</p>
+            <p className="origin"><span>Origin:</span> {place_of_origin}</p>
+            <p className="medium"><span>Medium:</span> {medium_display}</p>
+            <p className="dimensions"><span>Dimensions:</span> {dimensions}</p>
+            <p className="type"><span>Type:</span> {artwork_type_title}</p>
+            <p className="department"><span>Department:</span> {department_title}</p>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

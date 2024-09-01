@@ -2,12 +2,19 @@ import { ActionTypes } from "../constants/action-types";
 import artAPI from "../../api/artAPI";
 
 //Actions / Getters
-export const fetchProducts = (page = 1, limit = 25) => async (dispatch) => { 
-    const response = await artAPI.get(`/artworks?page=${page}&limit=${limit}&&fields=id,title,image_id,artist_title
-    `);
-
-    dispatch({type:ActionTypes.FETCH_PRODUCTS, payload: response.data.data})
-    dispatch({type:ActionTypes.RECEIVE_ARTWORK_PAGE, payload: response.data})
+export const fetchProducts = (page = 1, limit = 25) => async (dispatch, getState) => {
+    try {
+        const { currentSearchQuery } = getState().allProducts;
+        const endpoint = currentSearchQuery 
+          ? `/artworks/search?q=${currentSearchQuery}&page=${page}&limit=${limit}&fields=id,title,image_id,artist_title`
+          : `/artworks?page=${page}&limit=${limit}&fields=id,title,image_id,artist_title`;
+        const response = await artAPI.get(endpoint);
+        dispatch({type: ActionTypes.FETCH_PRODUCTS, payload: response.data.data});
+        dispatch({type: ActionTypes.RECEIVE_ARTWORK_PAGE, payload: response.data});
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        dispatch({type: ActionTypes.FETCH_PRODUCTS_ERROR, payload: error.message});
+    }
 }
 
 export const setPageLimit = (pageLimit) => {
@@ -20,8 +27,8 @@ export const setPageLimit = (pageLimit) => {
 export const searchArtwork = (query, page = 1, limit = 25) => async (dispatch) => {
   const response = await artAPI.get(`/artworks/search?q=${query}&page=${page}&limit=${limit}&&fields=id,title,image_id,artist_title`);
   dispatch({type: ActionTypes.SEARCH_ARTWORK, payload: response.data.data});
-  dispatch({type:ActionTypes.RECEIVE_ARTWORK_PAGE, payload: response.data})
-
+  dispatch({type:ActionTypes.RECEIVE_ARTWORK_PAGE, payload: response.data});
+  dispatch({type:ActionTypes.SET_SEARCH_QUERY, payload: query});
 }
 
 export const fetchCollectionDetail = (artId) => async (dispatch) => { 
@@ -62,3 +69,17 @@ export const favouriteToggle = (selectedProduct) => {
     payload: selectedProduct,
   };
 }
+
+export const setFavouritesPage = (page) => {
+  return {
+    type: ActionTypes.SET_FAVOURITES_PAGE,
+    payload: page,
+  };
+};
+
+export const setFavouritesPageLimit = (limit) => {
+  return {
+    type: ActionTypes.SET_FAVOURITES_PAGE_LIMIT,
+    payload: limit,
+  };
+};

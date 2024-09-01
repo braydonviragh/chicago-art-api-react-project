@@ -1,42 +1,60 @@
-import React, { useEffect, useCallback, useMemo } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts, setProductFavourites } from "../redux/actions/productsActions";
+import { fetchProducts, setProductFavourites, setPageLimit } from "../redux/actions/productsActions";
 import ProductComponent from "./ProductComponent";
 import Pagination from "./Pagination";
+import SkeletonLoader from "./SkeletonLoader";
 
 const ProductPage = () => {
-  const productMeta = useSelector((state) => state.allProducts.productMeta);
-  const paginationInfo = useSelector((state) => ({
-    currentPage: state.allProducts.currentPage,
-    totalPages: state.allProducts.totalPages,
-    pageLimit: state.allProducts.pageLimit,
-  }));
-  const productFavourites = useSelector(state => state.allProducts.productFavourites);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const { currentPage, totalPages, pageLimit } = useSelector((state) => state.allProducts);
 
   useEffect(() => {
-    dispatch(fetchProducts());
-    document.getElementById('search-bar').style.display = 'inline';
-    const savedFavourites = JSON.parse(localStorage.getItem("productFavourites")) || [];
-    setProductFavourites(savedFavourites);
-    const loadFavourites = async () => {
-      const savedFavourites = await JSON.parse(localStorage.getItem("productFavourites"));
-      dispatch(setProductFavourites(savedFavourites));
-    }
-    loadFavourites();
-  }, [dispatch]);
+    const loadData = async () => {
+      setIsLoading(true);
+      await dispatch(fetchProducts(currentPage, pageLimit));
+      document.getElementById('search-bar').style.display = 'inline';
+      const loadFavourites = async () => {
+        const savedFavourites = JSON.parse(localStorage.getItem("productFavourites")) || [];
+        dispatch(setProductFavourites(savedFavourites));
+      }
+      await loadFavourites();
+      setIsLoading(false);
+    };
+    loadData();
+  }, [dispatch, currentPage, pageLimit]);
   
+  const handlePageChange = (newPage) => {
+    dispatch(fetchProducts(newPage, pageLimit));
+  };
+
+  const handlePageLimitChange = (newLimit) => {
+    dispatch(setPageLimit(newLimit));
+    dispatch(fetchProducts(1, newLimit));
+  };
+
   return (
     <div>
       <div className="ui grid container">
-        <ProductComponent />
+      <h1 className="page-header">Artworks</h1>
+        {isLoading ? <SkeletonLoader /> : <ProductComponent />}
       </div>
       <div className="pagination">
-        <Pagination/>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageLimit={pageLimit}
+          onPageChange={(page, limit) => {
+            dispatch(fetchProducts(page, limit));
+          }}
+          onPageLimitChange={(limit) => {
+            dispatch(setPageLimit(limit));
+            dispatch(fetchProducts(1, limit));
+          }}
+        />
       </div>
     </div>
-
   );
 };
 

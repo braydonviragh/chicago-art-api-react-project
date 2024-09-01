@@ -1,34 +1,30 @@
-import React from "react";
-import { Redirect } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import { Twirl as Hamburger } from 'hamburger-react'
-import { useEffect, useState } from "react";
 
-const handleClick = () => {
-  window.location.href = '/';
-}; 
 const Header = () => {
   const [isOpen, setOpen] = useState(false)
 
   return (
     <div className="ui fixed menu">
       <div className="ui container center">
-        <h2 onClick={handleClick}>Art Institute of Chicago Gallery</h2> 
-        <a target="_blank"className="profile-link"href="https:braydonviragh.com">By Braydon Viragh</a>
+        <Link to="/">
+          <h2 className="header-title">Art Institute of Chicago Gallery</h2>
+        </Link>
+        <a target="_blank" rel="noopener noreferrer" className="profile-link" href="https://braydonviragh.com">By Braydon Viragh</a>
         <div className="favourites-div">
-          <a href="/favourites"className="favourites-link">
-            <img src="../images/icons/heart.png"/>
+          <Link to="/favourites" className="favourites-link">
+            <img src="../images/icons/heart.png" alt="Favorites icon"/>
             Favourites
-          </a>
+          </Link>
         </div>
         <div>
           <div className="hamburger-icon">
-            <Hamburger onToggle={toggled => {
-              setOpen(toggled);
-            }} />
+            <Hamburger onToggle={setOpen} />
           </div>
           <div className={`hamburger-menu ${isOpen ? 'open' : 'closed'}`}>
-            <a onClick={handleClick}>Art Institute of Chicago Gallery</a>
-            <a href="/favourites">Favourites</a>
+            <Link to="/" onClick={() => setOpen(false)}>Art Institute of Chicago Gallery</Link>
+            <Link to="/favourites" onClick={() => setOpen(false)}><span className="favourite-nav-link">Favourites<img src="../images/icons/heart.png" alt="Favorites icon"/></span></Link>
             <br/>
             <h5>By Braydon Viragh</h5>
           </div>

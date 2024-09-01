@@ -1,29 +1,23 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts, setPageLimit } from "../redux/actions/productsActions";
+import { useDispatch } from 'react-redux';
 
-const Pagination = () => {
+const Pagination = ({ currentPage, totalPages, pageLimit, onPageChange, onPageLimitChange }) => {
   const dispatch = useDispatch();
-  const paginationInfo = useSelector((state) => ({
-    currentPage: state.allProducts.currentPage,
-    totalPages: state.allProducts.totalPages,
-    pageLimit: state.allProducts.pageLimit,
-  }));
 
-  const { currentPage, totalPages, pageLimit } = paginationInfo;
   const handlePageChange = (page) => {
-    dispatch(fetchProducts(page, pageLimit));
+    onPageChange(page, pageLimit);
+  };
+
+  const handlePageLimitChange = (e) => {
+    const newLimit = parseInt(e.target.value, 10);
+    dispatch(onPageLimitChange(newLimit));
+    dispatch(onPageChange(1, newLimit));
   };
 
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
-
-  const handlePageLimitChange = (e) => {
-    dispatch(setPageLimit(e.target.value));
-    dispatch(fetchProducts(1, e.target.value));
-  };
 
   const renderPageNumbers = () => {
     if (totalPages <= 10) {
@@ -95,4 +89,4 @@ const Pagination = () => {
         );
     };
 
-     export default Pagination;
+    export default Pagination;
